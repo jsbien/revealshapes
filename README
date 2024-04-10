@@ -1,0 +1,296 @@
+DJVULIBRE-SHAPE-TOOLS
+=====================
+
+INFO
+====
+exportshapes is a tool for extracting shape libraries from DjVu documents
+into a MySQL database. 
+
+It is made available by the Formal Linguistics Department
+of the University of Warsaw. It has been implemented by Piotr Sikora
+to facilitate the development of tools for manipulation of DjVu shape
+libraries (see https://bitbucket.org/piotr_sikora/moredjvushapetools).
+
+The work is supported by the Ministry of Science and Higher Education's 
+grant no. N N519 384036 (cf. https://bitbucket.org/jsbien/ndt). 
+
+REQUIREMENTS
+============
+
+Exportshapes has all the requirements of DjVuLibre (see file: INSTALL) plus:
+
+	* Boost C++ library
+
+
+COMPILATION
+===========
+
+Currently it needs to be compiled as part of a fork of djvulibre.
+To compile it from the main folder type:
+
+./configure
+make depend
+make
+cd tools
+make exportshapes
+
+USAGE
+=====
+
+To use exportshapes, you need to provide it with a database name, host name, username, password and
+a filename to process. This will extract all shapes from the given document.
+
+An user account used by exportshapes needs to have privileges to CREATE, DROP, INSERT and SELECT a given database.
+
+./exportshapes [-i | -c | -o | -a | -l] [-f <page #>] [-t <page #>] [-a <document_address>] -u <username> -p <password> -h <host> -d <database> <file.djvu>
+
+Options -u, -p, -h, -d supply required parameters.
+
+Option -i inject required tables into the given database.
+
+Option -c creates a database of the given name and then injects required tables as the previous option does.
+
+Option -o does the same as -c, but also drops the database first, if it exists already. Good for testing.
+
+Option -f: its argument specifies a page number from which the processing should start.
+
+Option -t: its argument specifies a limit to the number of pages processed by the program.
+
+Option -a: its argument specifies a remote address associated with the document 
+	   (to allow remote users of the database to open the document via e.g. http).
+
+Option -l: only process data linking document pages with inherited dictionaries. Previous versions 
+		   of this tool didn't do so and running exportshapes with this tool fixes this shortcoming
+		   while being backwards compatible with an already filled database.
+
+E.g. "exportshapes -f 5 -t 10 [...]" would export shapes from pages 5,6,7,8,9 and 10.
+
+DATABASE STRUCTURE
+==================
+
+TABLE shapes:
+id INT not null auto_increment primary key,
+original_id INT not null, -- index in the page dictionary the shape comes from
+parent_id INT not null, -- references other shapes
+bits LONGBLOB,
+width INT,
+height INT,
+dictionary_id INT not null, --references table of dictionaries
+bbox_top INT, bbox_left INT, bbox_right INT, bbox_bottom INT -- bounding box
+
+
+TABLE blits: -- shapes' locations in document
+id INT not null auto_increment primary key,
+document_id INT not null, -- references table of documents
+page_number INT not null,
+shape_id INT not null, -- references table of shapes
+b_left SMALLINT UNSIGNED not null,
+b_bottom SMALLINT UNSIGNED not null
+
+TABLE documents: -- documents stored in the database
+id INT not null auto_increment primary key,
+document varchar(60) not null,
+document address(100) not null
+
+
+TABLE dictionaries: -- dictionaries stored in the database
+id INT not null auto_increment primary key,
+dictionary_name varchar(60) not null,
+page_number INT not null, -- which page this dictionary belongs to, inherited dictionaries have -1 in this field
+document_id INT not null -- references table of documents
+
+TABLE pages: -- linking inherited dictionaries with pages that use them
+document_id INT not null, -- which documents this entry refers to
+inh_dict_id INT not null, -- which inherited dictionary this entry refers to
+page_number INT not null -- which page uses that dictionary
+
+
+
+
+3- BUILDING DJVULIBRE
+=====================
+
+3.1- PREREQUISITES
+------------------
+
+DjVuLibre-3.5 relies on various components available from the web.  
+Most recent Linux distribution already come with these.  
+You can also download and compile them if you wish.
+Be sure to read the system specific notes 
+at the end of this file.
+
+COMPILER --
+Development is done with the GCC g++ compiler, which is therefore
+recommended for all platforms.  The CLANG compiler has been tried and
+seems to work, but its output has not been seriously tested.
+
+LIBJPEG/LIBTIFF --
+A small number of DjVu files internally use JPEG encoding instead 
+of IW44 wavelet encoding.  These files are processed using either 
+version 6a or 6b of the IJG libjpeg library <http://www.ijg.org>.  
+Some utility programs are able to read TIFF files. These programs
+rely on the LIBTIFF library <http://libtiff.org>.
+You can also compile DjVuLibre with neither JPEG nor TIFF support.  
+You might never notice the difference.
+
+
+3.2 - CONFIGURE
+---------------
+
+Chances are that everything will work by simply running 
+commands "./configure", "make" and "make install".
+
+Note that there will be no configure file if you obtain the djvulibre 
+source using git clone. Instead there is a script 'autogen.sh' that 
+uses automake to generate and call the actual configure script.
+Since all autogen.sh arguments will be passed to configure,
+you can simply treat autogen.sh as a replacement for configure.
+
+Various options and environment variables affect the execution of the
+configuration script.  A complete list can be obtained by typing 
+"configure --help".  Also see the INSTALL file for further details.
+Here are the most important ones.
+
+* Option "--prefix=PREFIXDIR"
+  This option specifies where the DjVuLibre software will be installed.
+  The default prefix is /usr/local.  
+
+* Option "--enable-desktopfiles[=(yes|no)]"
+  Installs icon and mime type files in the customary xdg directories.
+  The default is "yes".
+
+* Option "--with-jpeg=JPEGDIR"
+  This option specifies a directory where the JPEG library has been
+  compiled. This directory contains both the include files and the 
+  library.  Without this option, the configuration script will search 
+  the JPEG library in standard places.
+  When everything else fails, you can simply define the environment
+  variables JPEG_CFLAGS and JPEG_LIBS.
+
+* Option "--with-tiff=TIFFDIR"
+  This option specifies a directory where the LIBTIFF library has been
+  compiled. This directory contains both the include files and the 
+  library.  Without this option, the configuration script will search 
+  the LIBTIFF library in standard places.
+  When everything else fails, you can simply define the environment
+  variables TIFF_CFLAGS and TIFF_LIBS.
+
+Always check the output of the configuration script for warnings and errors.
+In particular, the configuration script might disable the compilation of
+djview if it cannot locate the required libraries and utilities.  The warning
+messages are the only way to know.
+
+3.3 - MAKE
+----------
+
+You can then perform the compilation by typing 
+
+        $ make
+
+The compilation can last a few minutes.  Again check the output for warnings
+and errors.  Finally a brief message lets you know that the compilation was
+successful.  You can then proceed with the installation.
+
+3.4 - INSTALL
+------------
+
+Typing:
+
+        $ make install
+
+or if necessary:
+
+        $ sudo make install
+
+should:
+
+- install the executable programs into "${prefix}/bin/".
+- possibly install the shared library into "${prefix}/lib/".
+- install the man pages under "${prefix}/man or ${prefix}/share/man/".
+- install various ancillary files under "${prefix}/share/djvu/".
+- install "${prefix}/share/pkgconfig.pc".
+- optionally install the icon and mime type information files
+
+Where ${prefix} refers to the directory specified by the prefix option
+of the configuration script, which defaults to "/usr/local", and the
+paths above can be fine-tuned using appropriate arguments to
+./configure and make.
+
+
+4 - BUILDING FOR MAC OS X
+=========================
+
+We recommend that you first install homebrew and use 
+command "brew install" to obtain the following packages:
+  $ brew install autoconf automake libtool pkg-config
+  $ brew install jpeg libtiff
+
+Note that homebrew comes with a djvulibre package already.
+The following instructions explain how to compile djvulibre
+in a standalone manner. You may want to do that if you want
+the latest version of djvulibre. Otherwise, chances are
+that you should just install the djvulibre homebrew package.
+  $ brew install djvulibre
+
+But most people should find sufficient
+to just install the homebrew package.
+
+Then you can run configure
+  $ ./configure --disable-desktopfiles 
+
+Then you can compile with 
+  $ make
+
+Running "make install" will install djvulibre in directory /usr/local.
+This may not be a good idea as they will interfere with homebrew.
+You may instead specify an alternate directory with DESTDIR=...
+  $ make install DESTDIR=/usr/local/djvulibre-install
+  
+
+
+5 - BUILDING FOR WINDOWS
+========================
+
+5.1- Using Microsoft Visual C++ 2019
+------------------------------------
+
+   See the directory win32.
+   Populate the zlib, jpeg and tiff directories with
+   the open source code suggested in the README files.
+   Check win32/djvulibre/dirs.props to see
+   how to name the directories.
+   Then open win32/djvulibre/djvulibre.sln and compile.
+
+   Next step would then be to follow the instructions
+   in the djview package to create a djview project and
+   add it to this solution. Finally you can use the script
+   djvulibre-install.sh and djvulibre.nsi to prepare
+   the djvulibre+djview installer.
+
+
+5.2- Using Mingw
+----------------
+
+   You must first install the mingw compiler and the msys environment.
+   See www.mingw.org for more information.
+   From the msys shell, run the usual commands 
+     $ configure
+     $ make
+   Then collect the djvulibre dll from directory libdjvu/.libs
+   and the executables from directory tools/.libs 
+   Please refer to the file INSTALL for information
+   about the arguments of the script 'configure'.
+
+
+5.3- Using Cygwin 
+-----------------
+
+   Simply run the usual commands 
+     $ configure
+     $ make
+     $ make install
+   Please refer to the file INSTALL for information
+   about the arguments of the script 'configure'.
+ 
+
+
