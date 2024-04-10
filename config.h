@@ -7,17 +7,8 @@
 /* config.h: begin */
 
 
-/* version string */
-#define DJVULIBRE_VERSION "3.5.28"
-
 /* define if bool is a built-in type */
 #define HAVE_BOOL 1
-
-/* define if the Boost library is available */
-#define HAVE_BOOST /**/
-
-/* Define if you have Boost.ScopeExit */
-/* #undef HAVE_BOOST_SCOPE_EXIT */
 
 /* Define to 1 if you have the <cpuid.h> header file. */
 #define HAVE_CPUID_H 1
@@ -53,12 +44,6 @@
 /* Define to 1 if you have the `getpwuid' function. */
 #define HAVE_GETPWUID 1
 
-/* Define to 1 if you have the iconv function. */
-#define HAVE_ICONV 1
-
-/* Define to 1 if you have the <iconv.h> header file. */
-#define HAVE_ICONV_H 1
-
 /* define if the compiler supports intel atomic builtins */
 #define HAVE_INTEL_ATOMIC_BUILTINS 1
 
@@ -68,14 +53,8 @@
 /* Define to 1 if you have the `iswspace' function. */
 #define HAVE_ISWSPACE 1
 
-/* Define if you have the IJG JPEG library. */
-#define HAVE_JPEG 1
-
 /* Define to 1 if you have the <langinfo.h> header file. */
 #define HAVE_LANGINFO_H 1
-
-/* Define to 1 if you have the `m' library (-lm). */
-#define HAVE_LIBM 1
 
 /* Define to 1 if the system has the type `long long int'. */
 #define HAVE_LONG_LONG_INT 1
@@ -94,9 +73,6 @@
 
 /* Define to 1 if you have a working `mmap' system call. */
 #define HAVE_MMAP 1
-
-/* Define if you have MySQL support */
-#define HAVE_MYSQL 1
 
 /* define if the compiler implements namespaces */
 #define HAVE_NAMESPACES 1
@@ -181,9 +157,6 @@
 /* Define to 1 if you have <sys/wait.h> that is POSIX.1 compatible. */
 #define HAVE_SYS_WAIT_H 1
 
-/* Define if you have libtiff. */
-#define HAVE_TIFF 1
-
 /* define if the compiler recognizes typename */
 #define HAVE_TYPENAME 1
 
@@ -221,25 +194,28 @@
 #define LT_OBJDIR ".libs/"
 
 /* Name of package */
-#define PACKAGE "djvulibre"
+#define PACKAGE "revealshapes"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT ""
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "djvulibre"
+#define PACKAGE_NAME "revealshapes"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "djvulibre 3.5.28"
+#define PACKAGE_STRING "revealshapes 3.5.28"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "djvulibre"
+#define PACKAGE_TARNAME "revealshapes"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "3.5.28"
+
+/* version string */
+#define REVEALSHAPES_VERSION "3.5.28"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -335,11 +311,6 @@
 #endif
 #ifndef HAVE_TYPENAME
 #define GCONTAINER_NO_TYPENAME 1
-#endif
-
-/* - JPEG */
-#ifdef HAVE_JPEG
-#define NEED_JPEG_DECODER 1
 #endif
 
 /* - MMAP */

@@ -38,6 +38,9 @@
 #include <GBitmap.h>
 #include <UnicodeByteStream.h>
 
+#include <cstdlib>
+#include <unistd.h>
+
 using namespace std;
 
 typedef std::pair<int, int> IntPair;
@@ -117,15 +120,16 @@ void usage(char **argv) {
 	std::cout << "Option -T: verbose" << std::endl;
 }
 
+
 int main(int argc, char **argv) {
 	try {
-		char *filename, *doc_address;
+		char *filename;
 		int c;
-		bool  given_address = false;
 		int page_from = 1 , page_to = -1;
-		while ((c = getopt (argc, argv, "Tolicd:u:h:p:f:t:a:")) != -1)
-			switch (c)
-		    {
+		bool test_run = false, links_only = false;
+
+		while ((c = getopt (argc, argv, "Tlf:t:")) != -1) {
+			switch (c) {
 				case 'T':
 					test_run = true;
 					break;
@@ -135,42 +139,57 @@ int main(int argc, char **argv) {
 				case 't':
 					page_to = atoi(optarg);
 					break;
-				case 'a':
-					doc_address = optarg;
-					given_address = true;
+				case 'l':
+					links_only = true;
 					break;
 				case '?':
-		    	 usage(argv);
+		    		cerr << "Unknown option: " << optopt << endl;
 		         return 1;
 		       default:
-		         usage(argv);
+		         cerr << "Usage: " << argv[0] << " [-T] [-f page_from] [-t page_to] [-l] filename" << endl;
 		         return 1;
 		    }
-
-		if (optind == argc -1) {
-			filename = argv[optind];
 		}
 
-		if (!given_address) {
-			doc_address = filename;
+		if (optind == argc) {
+			cerr << "Filename argument is missing." << endl;
+			return 1;
 		}
-		
+
+		filename = argv[optind];
 		const GURL::Filename::UTF8 url(filename);
 
 
-		GP<DjVuDocument> doc = DjVuDocument::create_wait(url);
-
-		if (!doc) {
-			std::cerr << "cannot open file" << std::endl;
-			return -1;
+                GP<DjVuDocument> doc = DjVuDocument::create_wait(url);
+ 
+                if (!doc) {
+                       cerr << "cannot open file" << endl;
+                       return -1;
+                } else {
+	               return process_document(page_from, page_to, doc);
 		}
 
-		return process_document(page_from, page_to, doc);
+		// Additional argument checking if needed
+		
+		// Database operations removed
+		
+		// Remaining logic for processing the document
+		cout << "Filename: " << filename << endl;
+		cout << "Page From: " << page_from << endl;
+		cout << "Page To: " << page_to << endl;
+		cout << "Test Run: " << (test_run ? "true" : "false") << endl;
+		cout << "Links Only: " << (links_only ? "true" : "false") << endl;
+
+		// Process the document
+		// Placeholder for document processing logic
+		
+		return EXIT_SUCCESS;
 	}
 	catch (exception& ex) {
-		std::cout << "An exception occurred: " << ex.what() << "\n";
+		cerr << "An exception occurred: " << ex.what() << endl;
 		return EXIT_FAILURE;
 	}
-	return EXIT_SUCCESS;
 }
+
+
 

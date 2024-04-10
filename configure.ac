@@ -1,6 +1,6 @@
 # -*-Shell-script-*-
 #
-# DjVuLibre-3.5
+# revealshapes-0.1
 # Copyright (c) 2002  Leon Bottou and Yann Le Cun.
 # Copyright (c) 2001  AT&T
 #
@@ -15,7 +15,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 # 
-# DjVuLibre-3.5 is derived from the DjVu(r) Reference Library
+# revealshapes-0.1 is derived from the DjVu(r) Reference Library
 # distribued by Lizardtech Software.
 #
 # ----------------------------------------
@@ -34,14 +34,14 @@ m4_define([lt_rev], [0])
 m4_define([lt_age], [m4_eval(v_mic - lt_compat)])
 
 AC_PREREQ([2.65])
-AC_INIT([djvulibre],[v_ver])
+AC_INIT([revealshapes],[v_ver])
 
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(config)
 AC_CONFIG_HEADER(config.h:config/config.h.in)
 AC_CANONICAL_HOST
 
-AM_INIT_AUTOMAKE([1.6 subdir-objects dist-bzip2 dist-xz -Wall])
+AM_INIT_AUTOMAKE([1.6 subdir-objects dist-bzip2 -Wall])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
@@ -108,21 +108,6 @@ AC_PROG_LN_S
 AC_PROG_MKDIR_P
 AC_PROG_SED
 AC_PATH_PROG([TOUCH], [touch])
-AC_PATH_PROG([RSVG], [rsvg-convert], [false])
-AC_PATH_PROG([INKSCAPE], [inkscape], [false])
-AC_PATH_PROG([CONVERT], [convert], [false])
-conversion_tool=no
-if test "x${RSVG}" != xfalse ; then
-  conversion_tool=rsvg
-elif test "x${INKSCAPE}" != xfalse ; then
-  conversion_tool=inkscape
-elif test "x${CONVERT}" != xfalse ; then
-  ( ${CONVERT} --version 2>&1 | grep -q ImageMagick ) && conversion_tool=convert
-fi
-AM_CONDITIONAL([HAVE_CONVERSION_RSVG], [test x${conversion_tool} = xrsvg])
-AM_CONDITIONAL([HAVE_CONVERSION_INKSCAPE], [test x${conversion_tool} = xinkscape])
-AM_CONDITIONAL([HAVE_CONVERSION_CONVERT], [test x${conversion_tool} = xconvert])
-AM_CONDITIONAL([HAVE_CONVERSION_TOOL], [test x${conversion_tool} != xno])
 
 # tweak rm to make libtool happy
 AC_PATH_PROG(RM, rm) 
@@ -148,37 +133,6 @@ AC_CXX_GCCTLS
 # Libraries
 # ----------------------------------------
 
-AC_CHECK_LIB(m,sqrt)
-AC_CHECK_LIB([mysqlclient], [mysql_init],
-    [have_mysql=yes],
-    [have_mysql=no])
-
-if test "x$have_mysql" = "xyes"; then
-    AC_DEFINE([HAVE_MYSQL], [1], [Define if you have MySQL support])
-    MYSQL_LIBS="-L/usr/lib/mysql -lmysqlclient"
-else
-    AC_MSG_ERROR([MySQL library not found])
-fi
-
-# Check for Boost library
-AX_BOOST_BASE([1.71.0],
-[have_boost=yes],
-[AC_MSG_ERROR([libfoo needs Boost, but it was not found in your system])]
-)
-AC_MSG_NOTICE(["have_boost value"])
-AC_MSG_NOTICE([$have_boost])
-
-# Check for Boost.ScopeExit
-AC_CHECK_LIB([boost_scope_exit], [boost/scope_exit.hpp],
-    [have_boost_scope_exit=yes],
-    [have_boost_scope_exit=no])
-
-if test "x$have_boost_scope_exit" = "xyes"; then
-    AC_DEFINE([HAVE_BOOST_SCOPE_EXIT], [1], [Define if you have Boost.ScopeExit])
-fi
-
-# AC_CHECK_LIB(iconv,libiconv_open) # not really used.
-
 
 # ----------------------------------------
 # Header Files
@@ -187,7 +141,7 @@ fi
 AC_HEADER_DIRENT
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT     
-AC_CHECK_HEADERS(wchar.h wctype.h sys/mman.h iconv.h getopt.h)
+AC_CHECK_HEADERS(wchar.h wctype.h sys/mman.h getopt.h)
 AC_CHECK_HEADERS(langinfo.h sched.h new.h)
 AC_CHECK_HEADERS(stdint.h inttypes.h sys/ipc.h sys/shm.h)
 AC_CHECK_HEADERS(cpuid.h)
@@ -217,21 +171,6 @@ AC_CHECK_FUNCS(putc_unlocked strerror vsnprintf snprintf)
 AC_CHECK_FUNCS(gethostname strftime getpwuid)
 AC_CHECK_FUNCS(sigaction mkstemp sched_yield)
 
-# iconv function might be defined as libiconv in iconv.h
-AC_MSG_CHECKING([for iconv])
-ac_has_iconv=no
-AC_LANG_PUSH(C)
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include "iconv.h"]], 
-  [[iconv((iconv_t)0, (char**)0, (size_t*)0, (char**)0, (size_t*)0);]])],
-  [ac_has_iconv=yes],[])
-AC_MSG_RESULT($ac_has_iconv)
-AC_LANG_POP(C)
-if test x$ac_has_iconv = xyes ; then
-    AC_DEFINE(HAVE_ICONV,1,
-        [Define to 1 if you have the iconv function.])
-fi
-
-
 # ----------------------------------------
 # Test auxilliary packages
 # ----------------------------------------
@@ -240,40 +179,13 @@ fi
 have_pthread=no
 AM_COND_IF([HAVE_OS_WIN32],,[AC_PATH_PTHREAD([have_pthread=yes])])
 
-# Search JPEG library
-AC_PATH_JPEG([have_jpeg="yes"], [have_jpeg="no"])
-AC_MSG_CHECKING([for libjpeg])
-AC_MSG_RESULT([${have_jpeg}])
-
-# Search TIFF library
-AC_PATH_TIFF([have_tiff="yes"], [have_tiff="no"])
-AC_MSG_CHECKING([for libtiff])
-AC_MSG_RESULT([${have_tiff}])
-
 # ----------------------------------------
 # What to compile
 # ----------------------------------------
 
-# Check compilation of xmltools
-want_xmltools="yes"
-AC_ARG_ENABLE([xmltools],
-   [AS_HELP_STRING([--disable-xmltools],
-           [Disable djvu xml tools. @<:@default=enabled@:>@])],
-   [want_xmltools=${enableval}])
-
-AM_CONDITIONAL([WANT_XMLTOOLS], [test "x${want_xmltools}" = "xyes"])
-
 # ----------------------------------------
 # Desktop files
 # ----------------------------------------
-
-ac_desktopfiles="yes"
-AC_ARG_ENABLE(desktopfiles,
-    AS_HELP_STRING([--disable-desktopfiles], 
-        [Do not install icons and mime types. @<:@default=enabled@:>@]),
-    [ac_desktopfiles=$enableval])
-
-AM_CONDITIONAL([WANT_DESKTOPFILES], [test "x${ac_desktopfiles}" = "xyes"])
 
 # ----------------------------------------
 # End
@@ -283,7 +195,7 @@ AM_CONDITIONAL([WANT_DESKTOPFILES], [test "x${ac_desktopfiles}" = "xyes"])
 PKG_INSTALLDIR
 
 # Define installation paths and version string
-AC_DEFINE_UNQUOTED(DJVULIBRE_VERSION,["${PACKAGE_VERSION}"],[version string])
+AC_DEFINE_UNQUOTED(REVEALSHAPES_VERSION,["${PACKAGE_VERSION}"],[version string])
 
 # Output files
 AC_CONFIG_FILES([
@@ -303,12 +215,6 @@ echo
 echo "  OS.................: ${host_os}"
 echo "  Win32 support......: ${have_os_win32}"
 echo "  Pthread support....: ${have_pthread}"
-echo "  Iconv support......: ${ac_has_iconv}"
-echo "  JPEG support.......: ${have_jpeg}"
-echo "  TIFF support.......: ${have_tiff}"
-echo "  XML tools..........: ${want_xmltools}"
-echo "  Desktop files......: ${ac_desktopfiles}"
-echo "  Icon generation....: ${conversion_tool}"
 echo
 echo "Compilation..........: make (or gmake)"
 echo "  CPPFLAGS...........: $CPPFLAGS"
@@ -376,11 +282,6 @@ AH_BOTTOM([
 #endif
 #ifndef HAVE_TYPENAME
 #define GCONTAINER_NO_TYPENAME 1
-#endif
-
-/* - JPEG */
-#ifdef HAVE_JPEG
-#define NEED_JPEG_DECODER 1
 #endif
 
 /* - MMAP */

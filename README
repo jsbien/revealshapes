@@ -3,54 +3,31 @@ DJVULIBRE-SHAPE-TOOLS
 
 INFO
 ====
-exportshapes is a tool for extracting shape libraries from DjVu documents
+revealshapes is stripped version of exportshapes, a tool for extracting shape libraries from DjVu documents
 into a MySQL database. 
+revealshapes just dumps the shape-coordinates on stadout, not to a database.
 
-It is made available by the Formal Linguistics Department
-of the University of Warsaw. It has been implemented by Piotr Sikora
-to facilitate the development of tools for manipulation of DjVu shape
-libraries (see https://bitbucket.org/piotr_sikora/moredjvushapetools).
-
-The work is supported by the Ministry of Science and Higher Education's 
-grant no. N N519 384036 (cf. https://bitbucket.org/jsbien/ndt). 
+Inspired by Piotr Sikora and Janusz Bien.
 
 REQUIREMENTS
 ============
 
-Exportshapes has all the requirements of DjVuLibre (see file: INSTALL) plus:
-
-	* Boost C++ library
+DjVuLibre see file: INSTALL
 
 
 COMPILATION
 ===========
 
-Currently it needs to be compiled as part of a fork of djvulibre.
-To compile it from the main folder type:
-
-./configure
-make depend
+./autogen.sh
 make
-cd tools
-make exportshapes
 
 USAGE
 =====
 
-To use exportshapes, you need to provide it with a database name, host name, username, password and
-a filename to process. This will extract all shapes from the given document.
+To use revealshapes, you need to provide it with a filename to process. This will extract all shapes from the given document.
 
-An user account used by exportshapes needs to have privileges to CREATE, DROP, INSERT and SELECT a given database.
+./revealshapes -l] [-f <page #>] [-t <page #>] [-a <document_address>] <file.djvu>
 
-./exportshapes [-i | -c | -o | -a | -l] [-f <page #>] [-t <page #>] [-a <document_address>] -u <username> -p <password> -h <host> -d <database> <file.djvu>
-
-Options -u, -p, -h, -d supply required parameters.
-
-Option -i inject required tables into the given database.
-
-Option -c creates a database of the given name and then injects required tables as the previous option does.
-
-Option -o does the same as -c, but also drops the database first, if it exists already. Good for testing.
 
 Option -f: its argument specifies a page number from which the processing should start.
 
@@ -63,78 +40,8 @@ Option -l: only process data linking document pages with inherited dictionaries.
 		   of this tool didn't do so and running exportshapes with this tool fixes this shortcoming
 		   while being backwards compatible with an already filled database.
 
-E.g. "exportshapes -f 5 -t 10 [...]" would export shapes from pages 5,6,7,8,9 and 10.
+E.g. "revealshapes -f 5 -t 10 [...]" would export shapes from pages 5,6,7,8,9 and 10.
 
-DATABASE STRUCTURE
-==================
-
-TABLE shapes:
-id INT not null auto_increment primary key,
-original_id INT not null, -- index in the page dictionary the shape comes from
-parent_id INT not null, -- references other shapes
-bits LONGBLOB,
-width INT,
-height INT,
-dictionary_id INT not null, --references table of dictionaries
-bbox_top INT, bbox_left INT, bbox_right INT, bbox_bottom INT -- bounding box
-
-
-TABLE blits: -- shapes' locations in document
-id INT not null auto_increment primary key,
-document_id INT not null, -- references table of documents
-page_number INT not null,
-shape_id INT not null, -- references table of shapes
-b_left SMALLINT UNSIGNED not null,
-b_bottom SMALLINT UNSIGNED not null
-
-TABLE documents: -- documents stored in the database
-id INT not null auto_increment primary key,
-document varchar(60) not null,
-document address(100) not null
-
-
-TABLE dictionaries: -- dictionaries stored in the database
-id INT not null auto_increment primary key,
-dictionary_name varchar(60) not null,
-page_number INT not null, -- which page this dictionary belongs to, inherited dictionaries have -1 in this field
-document_id INT not null -- references table of documents
-
-TABLE pages: -- linking inherited dictionaries with pages that use them
-document_id INT not null, -- which documents this entry refers to
-inh_dict_id INT not null, -- which inherited dictionary this entry refers to
-page_number INT not null -- which page uses that dictionary
-
-
-
-
-3- BUILDING DJVULIBRE
-=====================
-
-3.1- PREREQUISITES
-------------------
-
-DjVuLibre-3.5 relies on various components available from the web.  
-Most recent Linux distribution already come with these.  
-You can also download and compile them if you wish.
-Be sure to read the system specific notes 
-at the end of this file.
-
-COMPILER --
-Development is done with the GCC g++ compiler, which is therefore
-recommended for all platforms.  The CLANG compiler has been tried and
-seems to work, but its output has not been seriously tested.
-
-LIBJPEG/LIBTIFF --
-A small number of DjVu files internally use JPEG encoding instead 
-of IW44 wavelet encoding.  These files are processed using either 
-version 6a or 6b of the IJG libjpeg library <http://www.ijg.org>.  
-Some utility programs are able to read TIFF files. These programs
-rely on the LIBTIFF library <http://libtiff.org>.
-You can also compile DjVuLibre with neither JPEG nor TIFF support.  
-You might never notice the difference.
-
-
-3.2 - CONFIGURE
 ---------------
 
 Chances are that everything will work by simply running 
@@ -154,26 +61,6 @@ Here are the most important ones.
 * Option "--prefix=PREFIXDIR"
   This option specifies where the DjVuLibre software will be installed.
   The default prefix is /usr/local.  
-
-* Option "--enable-desktopfiles[=(yes|no)]"
-  Installs icon and mime type files in the customary xdg directories.
-  The default is "yes".
-
-* Option "--with-jpeg=JPEGDIR"
-  This option specifies a directory where the JPEG library has been
-  compiled. This directory contains both the include files and the 
-  library.  Without this option, the configuration script will search 
-  the JPEG library in standard places.
-  When everything else fails, you can simply define the environment
-  variables JPEG_CFLAGS and JPEG_LIBS.
-
-* Option "--with-tiff=TIFFDIR"
-  This option specifies a directory where the LIBTIFF library has been
-  compiled. This directory contains both the include files and the 
-  library.  Without this option, the configuration script will search 
-  the LIBTIFF library in standard places.
-  When everything else fails, you can simply define the environment
-  variables TIFF_CFLAGS and TIFF_LIBS.
 
 Always check the output of the configuration script for warnings and errors.
 In particular, the configuration script might disable the compilation of
@@ -223,7 +110,6 @@ paths above can be fine-tuned using appropriate arguments to
 We recommend that you first install homebrew and use 
 command "brew install" to obtain the following packages:
   $ brew install autoconf automake libtool pkg-config
-  $ brew install jpeg libtiff
 
 Note that homebrew comes with a djvulibre package already.
 The following instructions explain how to compile djvulibre
@@ -236,7 +122,7 @@ But most people should find sufficient
 to just install the homebrew package.
 
 Then you can run configure
-  $ ./configure --disable-desktopfiles 
+  $ ./configure
 
 Then you can compile with 
   $ make
