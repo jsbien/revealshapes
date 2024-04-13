@@ -29,14 +29,14 @@
 #include <bits/getopt_core.h>
 #include <bits/getopt_core.h>
 
-#include <DjVuDocument.h>
-#include <DjVuImage.h>
+#include "DjVuDocument.h"
+#include "DjVuImage.h"
 #include "/usr/include/libdjvu/ddjvuapi.h"
-#include <DjVmDir.h>
-#include <JB2Image.h>
-#include <Arrays.h>
-#include <GBitmap.h>
-#include <UnicodeByteStream.h>
+#include "DjVmDir.h"
+#include "JB2Image.h"
+#include "Arrays.h"
+#include "GBitmap.h"
+#include "UnicodeByteStream.h"
 
 #include <cstdlib>
 #include <unistd.h>

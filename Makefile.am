@@ -1,6 +1,6 @@
 bin_PROGRAMS = revealshapes
 
-AM_CPPFLAGS = -I /home/rmast/djvu-djvulibre-git/libdjvu
+AM_CPPFLAGS = -Iexternal
 AM_CXXFLAGS = $(PTHREAD_CFLAGS)
 
 revealshapes_SOURCES = revealshapes.cpp common.h
