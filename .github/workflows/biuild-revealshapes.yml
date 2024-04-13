@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Add deb-src URIs
+      run: |
+        echo "deb-src http://archive.ubuntu.com/ubuntu/ $(lsb_release -cs) main restricted" | sudo tee -a /etc/apt/sources.list
+        sudo apt-get update
     - name: checkout headerfiles
       run: apt-get source libdjvulibre-dev; ls
 ##   - uses: actions/checkout@v4
