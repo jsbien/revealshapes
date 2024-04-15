@@ -25,8 +25,23 @@ jobs:
     - uses: actions/checkout@v4
     - name: na checokut
       run: pwd
-    - name: checkout headerfiles
-      run: apt-get source libdjvulibre-dev; ls
+#    - name: checkout headerfiles
+#      run: apt-get source libdjvulibre-dev; ls
+
+    - name: Determine package version
+      run: |
+        version=$(apt-cache show libdjvulibre-dev | grep Version | awk '{print $2}')
+        echo "::set-output name=version::$version"
+
+    - name: Download source package
+      run: |
+        version=$(echo ${{ steps.determine_package_version.outputs.version }})
+        apt-get source "libdjvulibre-dev=$version"
+        
+    - name: Extract source package
+      run: |
+        tar -xf djvulibre_*.orig.tar.gz
+        
     - name: Copy header files
       run: |
         mkdir -p external
