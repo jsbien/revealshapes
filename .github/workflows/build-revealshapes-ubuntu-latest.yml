@@ -38,9 +38,9 @@ jobs:
         version=$(echo ${{ steps.determine_package_version.outputs.version }})
         apt-get source "libdjvulibre-dev=$version"
         
-    - name: Extract source package
-      run: |
-        tar -xf djvulibre_*.orig.tar.gz
+#    - name: Extract source package
+#      run: |
+#        tar -xf djvulibre_*.orig.tar.gz
         
     - name: Copy header files
       run: |
