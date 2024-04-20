@@ -40,6 +40,7 @@
 
 #include <cstdlib>
 #include <unistd.h>
+#include <filesystem>
 
 using namespace std;
 
@@ -49,7 +50,10 @@ typedef struct {
 	int right, top, left, bottom;
 } BoundingBox;
 
-bool test_run = false;
+bool test_run = false, poliqarp = false;
+char *filename;
+
+
 
 
 int process_document(int page_from, int page_to, GP<DjVuDocument> doc) {
@@ -64,8 +68,10 @@ int process_document(int page_from, int page_to, GP<DjVuDocument> doc) {
 		std::cout << "Can't process less than one page." << std::endl;
 		return EXIT_FAILURE;
 	}
-
-
+    std::filesystem::path sorig = filename;
+	std::string sorigString = sorig.string();
+	sorigString.erase(std::remove(sorigString.begin(), sorigString.end(), '\"'), sorigString.end());
+	std::filesystem::path s = filename;
 	std::cout << "sjbz or djbz,page number,blit number,blit shapeno,shape bits columns,rows,rowsize,blit bottom, left" << endl;
 
 
@@ -101,7 +107,15 @@ int process_document(int page_from, int page_to, GP<DjVuDocument> doc) {
 					JB2Blit *blit = jimg->get_blit(i);
 					if (blit) {
 						JB2Shape shape = jimg->get_shape(blit->shapeno);
-						std::cout << ((blit->shapeno < inh_sh_count)?"s":"d") << "," << page_number << "," << i << "," << blit->shapeno  << "," << shape.bits->columns() << ","  << shape.bits->rows() << ","  << shape.bits->rowsize() << "," << blit->bottom << ","  << blit->left << endl;
+						if (poliqarp ) {
+							//<file-name> d-<blit number>-<blit shapeno>;file:<file-name>?djvuopts=&highlight=<left>,<blit bottom>,<shape bit columns>,<rows>&page=<page number + 1>; <file-name> d-<blit number>-<blit shapeno>;
+							std::cout << s.replace_extension().filename();
+							std::cout <<" d-" <<i <<"-" << blit->shapeno << ";";
+							std::cout << "file:" << sorigString << "?djvuopts=&highlight=" << blit->left << "," << blit->bottom << "," << shape.bits->columns() << "," << shape.bits->rows()<< "&page="<<page_number<<";";
+							std::cout << s.filename() <<" d-" <<i <<"-" << blit->shapeno << std::endl;
+						} else {
+							std::cout << ((blit->shapeno < inh_sh_count)?"s":"d") << "," << page_number << "," << i << "," << blit->shapeno  << "," << shape.bits->columns() << ","  << shape.bits->rows() << ","  << shape.bits->rowsize() << "," << blit->bottom << ","  << blit->left << endl;
+						}
 					}
 				}
 			}
@@ -123,12 +137,11 @@ void usage(char **argv) {
 
 int main(int argc, char **argv) {
 	try {
-		char *filename;
 		int c;
 		int page_from = 1 , page_to = -1;
 		bool test_run = false, links_only = false;
 
-		while ((c = getopt (argc, argv, "Tlf:t:")) != -1) {
+		while ((c = getopt (argc, argv, "Tlpf:t:")) != -1) {
 			switch (c) {
 				case 'T':
 					test_run = true;
@@ -138,6 +151,9 @@ int main(int argc, char **argv) {
 					break;
 				case 't':
 					page_to = atoi(optarg);
+					break;
+				case 'p':
+					poliqarp = true;
 					break;
 				case 'l':
 					links_only = true;
@@ -174,11 +190,11 @@ int main(int argc, char **argv) {
 		// Database operations removed
 		
 		// Remaining logic for processing the document
-		cout << "Filename: " << filename << endl;
-		cout << "Page From: " << page_from << endl;
-		cout << "Page To: " << page_to << endl;
-		cout << "Test Run: " << (test_run ? "true" : "false") << endl;
-		cout << "Links Only: " << (links_only ? "true" : "false") << endl;
+		std::cout << "Filename: " << filename << endl;
+		std::cout << "Page From: " << page_from << endl;
+		std::cout << "Page To: " << page_to << endl;
+		std::cout << "Test Run: " << (test_run ? "true" : "false") << endl;
+		std::cout << "Links Only: " << (links_only ? "true" : "false") << endl;
 
 		// Process the document
 		// Placeholder for document processing logic
