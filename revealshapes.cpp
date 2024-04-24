@@ -41,6 +41,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <filesystem>
+#include <algorithm> 
 
 using namespace std;
 
@@ -70,7 +71,7 @@ int process_document(int page_from, int page_to, GP<DjVuDocument> doc) {
 	}
     std::filesystem::path sorig = filename;
 	std::string sorigString = sorig.string();
-	sorigString.erase(std::remove(sorigString.begin(), sorigString.end(), '\"'), sorigString.end());
+        sorigString.erase(std::remove_if(sorigString.begin(), sorigString.end(), [](char c) { return c == '\"'; }), sorigString.end());
 	std::filesystem::path s = filename;
 	std::cout << "sjbz or djbz,page number,blit number,blit shapeno,shape bits columns,rows,rowsize,blit bottom, left" << endl;
 
