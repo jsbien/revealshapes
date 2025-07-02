@@ -13,4 +13,6 @@ Earlier changes are not included.
    [Commit `b72f98b`](https://github.com/jsbien/revealshapes/commit/b72f98bbbd72d543d8821a12429f4eac1c14c117)
 
 4. **Cleanup: Remove stale jb2cmp/.deps directory and .Po dependency files**  
-   These files referenced previously removed tools (`classify`, `cuts`, `frames`, etc.) and were leftovers from an old build system.
+   [Commit `0ab4376`](https://github.com/jsbien/revealshapes/commit/0ab43768283758a1e7db54fa2e36dde723b04b41)  
+   These files referenced previously removed tools (`classify`, `cuts`, `frames`, etc.) and were leftover from an old build system.
+
