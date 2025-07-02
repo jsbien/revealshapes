@@ -16,3 +16,5 @@ Earlier changes are not included.
    [Commit `0ab4376`](https://github.com/jsbien/revealshapes/commit/0ab43768283758a1e7db54fa2e36dde723b04b41)  
    These files referenced previously removed tools (`classify`, `cuts`, `frames`, etc.) and were leftover from an old build system.
 
+5  Added technical overview documentation [58b7460]
+  - Created docs/overview.md describing the purpose, usage, and structure of the revealshapes tool.
