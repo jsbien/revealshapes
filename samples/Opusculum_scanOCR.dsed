@@ -1,0 +1,16 @@
+# Edit it and store it with command:
+#   $ djvused foo.djvu -f thisfile -s
+# The following line is the djvused command
+# to set the metadana and the rest is the metadata
+# (note the point in the last line)
+select
+set-meta
+Author "Rafał Wójcik"
+Title "Opusculum de arte memorativa Jana Szklarka : bernardyński traktat mnemotechniczny z 1504 roku" 
+Publisher "Wydawnictwo Poznańskie Studia Polonistyczne"
+Year "2006"
+URL "https://polona.pl/preview/aa8a86f1-23fe-4ef8-b9f4-b36499c4a351"
+URLnote = "Scans extracted and converted to DjVu by Janusz S. Bień in 2025"
+URL1 "https://www.wbc.poznan.pl/dlibra/publication/310297"
+
+.
