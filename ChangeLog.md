@@ -1,20 +1,16 @@
 # Changelog
 
-This changelog tracks modifications made in the present fork of https://github.com/rmast/revealshapes.
-Earlier changes are not included.
+## 2025-06-27  Fix: Correct page numbering to 1-based indexing [4ac2fcb]
+- Adjusted label handling logic to start at page 1 instead of 0.
 
-1. **Fix: Correct page numbering (use 1-based index)**  
-   [Commit `4ac2fcb`](https://github.com/jsbien/revealshapes/commit/4ac2fcb9355b0c4dc81fa8711c0d6d4426c1f861)
+## 2025-06-28  Docs: Add AUTHORS and CONTRIBUTING.md [5e2b27f]
+- Added initial contributors' attribution and contribution guidelines.
 
-2. **Doc: Add AUTHORS and CONTRIBUTING.md**  
-   [Commit `5e2b27f`](https://github.com/jsbien/revealshapes/commit/5e2b27f17ad5e88b4fdc6aee1f0aa1a8f4fba61f)
+## 2025-06-29  Docs: Convert screenshot annotations to Markdown and renumber [b72f98b]
+- Converted image documentation to `docs/screenshots.md` with proper numbering.
 
-3. **Doc: Convert screenshot annotations to Markdown (numbered)**  
-   [Commit `b72f98b`](https://github.com/jsbien/revealshapes/commit/b72f98bbbd72d543d8821a12429f4eac1c14c117)
+## 2025-07-01  Cleanup: Remove stale .deps directory and .Po files [0ab4376]
+- Removed unused build artifacts from `jb2cmp/.deps` leftover from earlier toolchain.
 
-4. **Cleanup: Remove stale jb2cmp/.deps directory and .Po dependency files**  
-   [Commit `0ab4376`](https://github.com/jsbien/revealshapes/commit/0ab43768283758a1e7db54fa2e36dde723b04b41)  
-   These files referenced previously removed tools (`classify`, `cuts`, `frames`, etc.) and were leftover from an old build system.
-
-5  Added technical overview documentation [58b7460]
-  - Created docs/overview.md describing the purpose, usage, and structure of the revealshapes tool.
+## 2025-07-01  Docs: Add technical overview documentation [58b7460]
+- Created `docs/overview.md` explaining the tool's purpose, usage, and structure.
