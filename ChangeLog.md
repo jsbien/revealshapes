@@ -1,5 +1,8 @@
 # Changelog
 
+## 2025-07-01  Fix: Correct page numbering in default output [bf287f0]
+- Changed page index from 0-based to 1-based in standard output mode (consistent with poliqarp).
+
 ## 2025-06-27  Fix: Correct page numbering to 1-based indexing [4ac2fcb]
 - Adjusted label handling logic to start at page 1 instead of 0.
 
