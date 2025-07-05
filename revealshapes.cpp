@@ -51,6 +51,9 @@ typedef struct {
 	int right, top, left, bottom;
 } BoundingBox;
 
+#include <fstream>
+std::ostream* out_stream = &std::cout;
+std::ofstream out_file;
 char *output_file = nullptr;
 bool test_run = false, poliqarp = false;
 char *filename;
