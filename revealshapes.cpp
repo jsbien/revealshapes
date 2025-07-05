@@ -176,6 +176,15 @@ int main(int argc, char **argv) {
 		         return 1;
 		       default:
 		         cerr << "Usage: " << argv[0] << " [-T] [-f page_from] [-t page_to] [-l] filename" << endl;
+    // Open output file if specified
+    if (output_file) {
+        out_file.open(output_file);
+        if (!out_file) {
+            std::cerr << "Error: Cannot open output file: " << output_file << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        out_stream = &out_file;
+    }
 		         return 1;
 		    }
 		}
