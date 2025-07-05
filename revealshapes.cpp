@@ -133,8 +133,8 @@ if (!poliqarp)
 void usage(const char *program_name);
 
 
-    std::cout << "RevealShapes version " << VERSION << std::endl;
 void usage(const char *program_name) {
+    std::cout << "RevealShapes version " << VERSION << std::endl;
     std::cout << "Usage: " << program_name << " [options] <input_file>" << std::endl;
     std::cout << "Options:" << std::endl;
     std::cout << "  -f <n>         Start from page number n" << std::endl;
