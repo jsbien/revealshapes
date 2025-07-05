@@ -143,7 +143,6 @@ void usage(const char *program_name) {
     std::cout << "  -o <file>      Specify output file (default: standard output)" << std::endl;
     std::cout << "  -h             Show this help message and exit" << std::endl;
 }
-}
 
 
 int main(int argc, char **argv) {
