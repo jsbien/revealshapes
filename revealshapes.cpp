@@ -130,8 +130,7 @@ if (!poliqarp)
 	}
 	return EXIT_SUCCESS;
 }
-
-
+void usage(const char *program_name) {
     std::cout << "RevealShapes version " << VERSION << std::endl;
     std::cout << "RevealShapes version " << VERSION << std::endl;
 
