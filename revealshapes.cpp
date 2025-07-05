@@ -132,6 +132,7 @@ if (!poliqarp)
 }
 
 
+    std::cout << "RevealShapes version " << VERSION << std::endl;
 
 
 void usage(const char *program_name) {
