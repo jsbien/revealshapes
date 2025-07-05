@@ -119,7 +119,7 @@ int process_document(int page_from, int page_to, GP<DjVuDocument> doc) {
 *out_stream << "file:" << sorigString << "?djvuopts=&highlight=" << blit->left << "," << blit->bottom << "," << shape.bits->columns() << "," << shape.bits->rows() << "&page=" << (page_number + 1) << ";";
 *out_stream << s.filename() << " d-" << i << "-" << blit->shapeno << std::endl;
 						} else {
-std::cout << ((blit->shapeno < inh_sh_count)?"s":"d") << "," << (page_number + 1) << "," << i << "," << blit->shapeno  << "," << shape.bits->columns() << ","  << shape.bits->rows() << ","  << shape.bits->rowsize() << "," << blit->bottom << ","  << blit->left << endl;
+*out_stream << ((blit->shapeno < inh_sh_count)?"s":"d") << "," << (page_number + 1) << "," << i << "," << blit->shapeno  << "," << shape.bits->columns() << ","  << shape.bits->rows() << ","  << shape.bits->rowsize() << "," << blit->bottom << ","  << blit->left << endl;
 						}
 					}
 				}
