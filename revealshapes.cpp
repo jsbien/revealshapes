@@ -51,6 +51,7 @@ typedef struct {
 	int right, top, left, bottom;
 } BoundingBox;
 
+char *output_file = nullptr;
 bool test_run = false, poliqarp = false;
 char *filename;
 
