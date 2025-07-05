@@ -148,7 +148,6 @@ int main(int argc, char **argv) {
 
         // Extend option string to include 'o' and 'h'
         while ((c = getopt (argc, argv, "Tlpf:t:o:h")) != -1) {
-		while ((c = getopt (argc, argv, "Tlpf:t:")) != -1) {
 			switch (c) {
 				case 'T':
         case 'o':
