@@ -133,14 +133,16 @@ std::cout << ((blit->shapeno < inh_sh_count)?"s":"d") << "," << (page_number + 1
 
 
 void usage(const char *program_name) {
-    std::cout << "Usage: " << program_name << " ..." << std::endl;
-    std::cout << "Option -T: only test input" << std::endl;
-    std::cout << "Option -l: list shapes" << std::endl;
-    std::cout << "Option -p: print shape trees" << std::endl;
-    std::cout << "Option -f <file>: input filename" << std::endl;
-    std::cout << "Option -t <format>: output format" << std::endl;
-    std::cout << "Option -o <file>: specify output file (default: standard output)." << std::endl;
-    std::cout << "Option -h: show this help message and exit." << std::endl;
+    std::cout << "Usage: " << program_name << " [options] <input_file>" << std::endl;
+    std::cout << "Options:" << std::endl;
+    std::cout << "  -f <n>         Start from page number n" << std::endl;
+    std::cout << "  -t <n>         Stop at page number n" << std::endl;
+    std::cout << "  -T             Verbose/debug mode" << std::endl;
+    std::cout << "  -p             Output links for Poliqarp indexing" << std::endl;
+    std::cout << "  -l             Output only links (currently unused)" << std::endl;
+    std::cout << "  -o <file>      Specify output file (default: standard output)" << std::endl;
+    std::cout << "  -h             Show this help message and exit" << std::endl;
+}
 }
 
 
