@@ -114,10 +114,10 @@ int process_document(int page_from, int page_to, GP<DjVuDocument> doc) {
 						JB2Shape shape = jimg->get_shape(blit->shapeno);
 						if (poliqarp ) {
 							//<file-name> d-<blit number>-<blit shapeno>;file:<file-name>?djvuopts=&highlight=<left>,<blit bottom>,<shape bit columns>,<rows>&page=<page number + 1>; <file-name> d-<blit number>-<blit shapeno>;
-							std::cout << s.replace_extension().filename();
-							std::cout <<" d-" <<i <<"-" << blit->shapeno << ";";
-std::cout << "file:" << sorigString << "?djvuopts=&highlight=" << blit->left << "," << blit->bottom << "," << shape.bits->columns() << "," << shape.bits->rows() << "&page=" << (page_number + 1) << ";";
-							std::cout << s.filename() <<" d-" <<i <<"-" << blit->shapeno << std::endl;
+*out_stream << s.replace_extension().filename();
+*out_stream << " d-" << i << "-" << blit->shapeno << ";";
+*out_stream << "file:" << sorigString << "?djvuopts=&highlight=" << blit->left << "," << blit->bottom << "," << shape.bits->columns() << "," << shape.bits->rows() << "&page=" << (page_number + 1) << ";";
+*out_stream << s.filename() << " d-" << i << "-" << blit->shapeno << std::endl;
 						} else {
 std::cout << ((blit->shapeno < inh_sh_count)?"s":"d") << "," << (page_number + 1) << "," << i << "," << blit->shapeno  << "," << shape.bits->columns() << ","  << shape.bits->rows() << ","  << shape.bits->rowsize() << "," << blit->bottom << ","  << blit->left << endl;
 						}
