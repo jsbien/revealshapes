@@ -191,6 +191,15 @@ int main(int argc, char **argv) {
     }
 		         return 1;
 		    }
+        // Open output file if specified (moved from default block)
+        if (output_file) {
+            out_file.open(output_file);
+            if (!out_file) {
+                std::cerr << "Error: Cannot open output file: " << output_file << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            out_stream = &out_file;
+        }
 		}
 
 		if (optind == argc) {
