@@ -148,6 +148,12 @@ int main(int argc, char **argv) {
 		while ((c = getopt (argc, argv, "Tlpf:t:")) != -1) {
 			switch (c) {
 				case 'T':
+        case 'o':
+            output_file = optarg;
+            break;
+        case 'h':
+            usage(argv[0]);
+            exit(EXIT_SUCCESS);
 					test_run = true;
 					break;
 				case 'f':
