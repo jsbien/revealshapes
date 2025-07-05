@@ -143,6 +143,8 @@ int main(int argc, char **argv) {
 		int page_from = 1 , page_to = -1;
 		bool test_run = false, links_only = false;
 
+        // Extend option string to include 'o' and 'h'
+        while ((c = getopt (argc, argv, "Tlpf:t:o:h")) != -1) {
 		while ((c = getopt (argc, argv, "Tlpf:t:")) != -1) {
 			switch (c) {
 				case 'T':
