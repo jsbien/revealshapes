@@ -132,13 +132,15 @@ std::cout << ((blit->shapeno < inh_sh_count)?"s":"d") << "," << (page_number + 1
 
 
 
-void usage(char **argv) {
-	std::cout << "Usage: " << argv[0] << "[-t <page #>] [-f <page #>] [-T] <filename>" << std::endl;
-	std::cout << "Option -f: its argument specifies a page number from which the processing should start." << std::endl;
-	std::cout << "Option -t: its argument specifies a limit to the number of pages processed by the program." << std::endl;
-    std::cout << "Option -o: specify output file (default: standard output)." << std::endl;
+void usage(const char *program_name) {
+    std::cout << "Usage: " << program_name << " ..." << std::endl;
+    std::cout << "Option -T: only test input" << std::endl;
+    std::cout << "Option -l: list shapes" << std::endl;
+    std::cout << "Option -p: print shape trees" << std::endl;
+    std::cout << "Option -f <file>: input filename" << std::endl;
+    std::cout << "Option -t <format>: output format" << std::endl;
+    std::cout << "Option -o <file>: specify output file (default: standard output)." << std::endl;
     std::cout << "Option -h: show this help message and exit." << std::endl;
-	std::cout << "Option -T: verbose" << std::endl;
 }
 
 
