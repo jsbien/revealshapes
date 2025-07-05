@@ -77,7 +77,8 @@ int process_document(int page_from, int page_to, GP<DjVuDocument> doc) {
 	std::string sorigString = sorig.string();
         sorigString.erase(std::remove_if(sorigString.begin(), sorigString.end(), [](char c) { return c == '\"'; }), sorigString.end());
 	std::filesystem::path s = filename;
-*out_stream << "sjbz or djbz,page number,blit number,blit shapeno,shape bits columns,rows,rowsize,blit bottom, left" << endl;
+if (!poliqarp)
+    *out_stream << "sjbz or djbz,page number,blit number,blit shapeno,shape bits columns,rows,rowsize,blit bottom, left" << endl;
 
 
 	for(int page_number = page_start; page_number < page_limit; page_number++) {
